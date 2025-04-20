@@ -35,7 +35,7 @@ export default function HowItWorks() {
           <div
             style={{
               clipPath:
-                "polygon(50% 0%,61% 35%,98% 35%, 68% 57%, 79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)",
+                'path("M353.5,278.5Q329,317,278.5,330.5Q228,344,189.5,314.5Q151,285,120,257.5Q89,230,69.5,190.5Q50,151,92.5,122.5Q135,94,188,63.5Q241,33,280,75.5Q319,118,352.5,159Q386,200,353.5,278.5Z")',
             }}
             className="relative left-[calc(50%-11rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-linear-to-br from-emerald-500 via-teal-500 to-cyan-500 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72rem]"
           />
