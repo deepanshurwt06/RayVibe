@@ -179,3 +179,9 @@
     max-width: 1400px;
   }
 }
+
+body {
+  background-color: #f8edeb; /* Your desired background color */
+  margin: 0;
+  padding: 0;
+}

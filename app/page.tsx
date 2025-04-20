@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
     <div className="relative w-full">
-      <BgGradient children={undefined} />
+      <BgGradient  />
      <div className="flex flex-col">
      <HeroSection />  
      <DemoSection /> 
