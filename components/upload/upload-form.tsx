@@ -4,7 +4,9 @@ import { on } from "events";
 import UploadFormInput from '@/components/upload/upload-form-input';
 import { z } from "zod";
 import { useUploadThing } from "@/utils/uploadthing";
-// import { generatePdfSummary } from "@/actions/upload-actions";
+import { useRef, useState } from 'react';
+import { toast } from 'sonner';
+
 
 const schema = z.object({
     file: z
@@ -17,22 +19,26 @@ const schema = z.object({
 
 
 export default function UploadForm() {
+    const formRef = useRef<HTMLFormElement>(null);
+    const [isLoading, setIsLoading] = useState(false);
      
     const {startUpload , routeConfig} = useUploadThing("pdfUploader", {
         onClientUploadComplete: () => {
-            console.log('uploaded successfully');
+            toast.success('File uploaded successfully ✅');
         },
         onUploadError:()=>{
             console.log("error occured while uploading")
         },
         onUploadBegin:({file})=>{
-            console.log('uploading has begin', file);
+            toast.message('Uploading started 📤');
         }
     });
    
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>)  =>{
         e.preventDefault();
+        try {
+        setIsLoading(true);
 
         console.log("submitted");
         const formData = new FormData(e.currentTarget);
@@ -45,6 +51,8 @@ export default function UploadForm() {
 
          if(!validatedFields.success){
             console.log(validatedFields.error.flatten().fieldErrors.file?.[0] ?? 'Invalid file');
+
+           setIsLoading(false);
             return;
          }
          
@@ -53,6 +61,7 @@ export default function UploadForm() {
         // upload the file to upload thing
         const resp = await startUpload([file]);
         if(!resp) {
+            setIsLoading(false);
             return;
         }
        
@@ -64,16 +73,39 @@ export default function UploadForm() {
                 "Content-Type": "application/json",
             },
         });
-        const summary = await summaryRes.json();
-        console.log({summary});
+        const result = await summaryRes.json();
+        
+
+        const {data = null , message = null } = result ||{};
+        if(data){
+            
+            toast.success('Summary generated successfully 📚✨');
+            formRef.current?.reset();
+            if(data.summary){
+              // save the summary to database
+            } 
+            
+        }
+       
+            
+       
         // summarize the pdf using AI
         // save the summary to the database 
         // redirect to the summary page
 
+    } catch (error) {
+        setIsLoading(false);
+        console.error('Error occurred', error);
+        formRef.current?.reset();
+    }
+
+
     }
    return (
     <div className="flex flex-col gap-8 w-full max-w-2xl mx-auto">
-     <UploadFormInput onSubmit={handleSubmit}
+     <UploadFormInput 
+      isLoading={isLoading}
+     ref={formRef} onSubmit={handleSubmit}
      />
     </div>
   );

@@ -1,5 +1,6 @@
 'use server'
 import { fetchAndExtractPdfText } from "@/lib/langchain";
+import { generateSummaryFromOpenAI } from "@/lib/openai";
 
  
 
@@ -80,10 +81,31 @@ export async function generatePdfSummary(uploadResponse: any) {
         const pdfText = await fetchAndExtractPdfText(pdfUrl);
         console.log("this is pdf text", pdfText);
 
+       
+        let summary;
+
+        try {
+            summary = await generateSummaryFromOpenAI(pdfText);
+            console.log("this is summary", summary);
+        } catch (error) {
+            console.log(error);
+            // call gemini
+        }
+       
+        if(!summary){
+            return {
+                success: false,
+                message: 'Summary generation failed',
+                data: null,
+            };
+        }
         return {
             success: true,
-            message: 'PDF Parsed Successfully',
-            data: pdfText,
+            message: 'Summary generated successfully',
+            data: {
+                summary,
+                
+            },
         };
     } catch (error) {
         console.log("this is the error of upload-action block", error);
