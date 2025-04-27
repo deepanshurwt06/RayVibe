@@ -27,7 +27,7 @@ export async function generateSummaryFromOpenAI(pdfText: string) {
     
     } catch (error :any) {
         if(error?.status === 429){
-           throw new Error('Rate limit exceeded. Please try again later.');
+           throw new Error('RATE_LIMIT_EXCEEDED');
         }
         throw error;
     }
