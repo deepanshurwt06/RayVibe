@@ -17,13 +17,28 @@ export async function generateSummaryFromOpenAI(pdfText: string) {
                 },
                 {
                     role: "user",
-                    content: `Transform this document into an engaging , easy-to-read summary with contextually relevant emojis and proper markdown formatting:\n\n${pdfText}`,
+                    content: ` Transform this document into an engaging, easy-to-read summary with contextually relevant emojis and proper markdown formatting. Also, generate a short, clear title (less than 8 words) for the document. Respond ONLY in this JSON format:\n\n{ "title": "Generated Title", "summary": "Generated Summary" }\n\nDocument:\n\n${pdfText}`,
+
+                   
                 },
             ],
            temperature:0.7,
            max_tokens: 1500,
         });
-        return completion.choices[0].message.content;
+        const result = completion.choices[0].message.content;
+        let parsedResult;
+
+        try {
+            if (result === null) {
+                throw new Error("OpenAI response is null");
+            }
+            parsedResult = JSON.parse(result); // Parse the response to extract title and summary
+        } catch (e) {
+            console.error("Error parsing the response from OpenAI:", e);
+            throw new Error("Invalid response format");
+        }
+
+        return parsedResult; 
     
     } catch (error :any) {
         if(error?.status === 429){

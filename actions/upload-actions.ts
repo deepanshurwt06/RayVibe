@@ -26,10 +26,15 @@ export async function generatePdfSummary(uploadResponse: any) {
 
        
         let summary;
+        let title;
 
-        try {
+        try { 
+            // generate summary
+
             summary = await generateSummaryFromOpenAI(pdfText);
             console.log("this is summary", summary);
+
+           
         } catch (error) {
             
             // call gemani

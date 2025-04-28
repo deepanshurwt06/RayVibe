@@ -14,11 +14,12 @@ const SummaryHeader = ({
   title: string;
   createdAt: string;
 }) => {
+
   return <div className="flex items-start gap-2 sm:gap-4">
       <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-rose-400 mt-1"/>
       <div>
       <h3 className="text-base xl:text-lg font-semibold text-gray-900 truncate w-4/5">{title}</h3>
-      <p className="text-sm text-gray-500">{createdAt}</p>
+      <p className="text-sm text-gray-500">{new Date(createdAt).toLocaleDateString()}</p>
       </div>
       
   </div>;
@@ -29,6 +30,18 @@ const StatusBadge = ({status} :{status:string}) => {
 }
 
 export default function SummaryCard({ summary }: { summary: any }) {
+
+    const { title, summary_text, status, created_at, original_file_url, id } = summary;
+
+    
+    let parsedSummary = { title: '', summary: '' };
+    try {
+      parsedSummary = JSON.parse(summary_text);
+    } catch (error) {
+      console.error('Error parsing summary text:', error);
+    }
+
+
   return (
     <div>
       <Card className="relative h-full">
@@ -38,17 +51,17 @@ export default function SummaryCard({ summary }: { summary: any }) {
         <Link href={`summaries/${summary.id}`} className="block p-4 sm:p-6">
           <div className="flex flex-col gap-3 sm:gap-4">
             <SummaryHeader
-              fileUrl={summary.original_file_url}
-              title={summary.title}
-              createdAt={summary.created_at}
+              fileUrl={original_file_url}
+              title={parsedSummary.title || title}
+              createdAt={created_at}
             />
          
           <p className="text-gray-600 line-clamp-2 text-sm sm:text-base pl-2">
-            {summary.summary_text}
+            {parsedSummary.summary || summary_text}
           </p>
           
           <div className="flex justify-between items-center mt-2 sm:mt-4 ">
-            <StatusBadge status={summary.status} />
+            <StatusBadge status={status} />
             <span></span>
           </div>
           </div>

@@ -19,7 +19,8 @@ export const generateSummaryFromGemini = async (pdfText :string) =>{
                         parts: [
                             {text: SUMMARY_SYSTEM_PROMPT},
                             {
-                                text: `Transform this document into an engaging , easy-to-read summary with contextually relevant emojis and proper markdown formatting:\n\n${pdfText}`,
+                                text: `Transform this document into an engaging, easy-to-read summary with contextually relevant emojis and proper markdown formatting. Also, generate a short, clear title (less than 8 words) for the document. Respond ONLY in this JSON format:\n\n{ "title": "Generated Title", "summary": "Generated Summary" }\n\nDocument:\n\n${pdfText}`
+,
                             },
                         ],
                     },
@@ -32,8 +33,14 @@ export const generateSummaryFromGemini = async (pdfText :string) =>{
             if(!response.text()){
                 throw new Error('Empty response from GEmini API');
             }
-
-            return response.text();
+            
+            const textResponse = response.text();
+            const cleanedResponse = textResponse.replace(/^```json|\n```$/g, '').trim();
+        
+            
+            const parsedResult = JSON.parse(cleanedResponse);
+        
+            return parsedResult;
         }
      catch (error:any) {
        
