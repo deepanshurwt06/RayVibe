@@ -7,6 +7,8 @@ import { useUploadThing } from "@/utils/uploadthing";
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { storedPdfSummaryAction } from "@/actions/upload-actions";
+import { useRouter } from "next/navigation";
+
 
 
 const schema = z.object({
@@ -22,6 +24,7 @@ const schema = z.object({
 export default function UploadForm() {
     const formRef = useRef<HTMLFormElement>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
      
     const {startUpload , routeConfig} = useUploadThing("pdfUploader", {
         onClientUploadComplete: () => {
@@ -94,11 +97,14 @@ export default function UploadForm() {
               // save the summary to database
               toast.success('Your PDF has been successfully summarized and saved ✨');
               formRef.current?.reset();
-            } 
-
-            
+            }     
         }
-       
+
+        formRef.current?.reset();
+        router.push(`/summaries/${storeResult.data.id}`);
+
+        // todo: redirect to the id page summary 
+        
             
        
         // summarize the pdf using AI
@@ -109,6 +115,8 @@ export default function UploadForm() {
         setIsLoading(false);
         console.error('Error occurred', error);
         formRef.current?.reset();
+    } finally {
+        setIsLoading(false);
     }
 
 
