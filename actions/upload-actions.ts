@@ -6,6 +6,8 @@ import { generateSummaryFromOpenAI } from "@/lib/openai";
 import { formatedFileNameAsTitle } from "@/utils/format-utils";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { generateSummaryFromCohere } from "@/lib/cohere";
+
 
 export async function generatePdfSummary(uploadResponse: any) {
     if (!uploadResponse || !uploadResponse[0]?.serverData?.file?.url) {
@@ -24,60 +26,59 @@ export async function generatePdfSummary(uploadResponse: any) {
         const pdfText = await fetchAndExtractPdfText(pdfUrl);
         console.log("this is pdf text", pdfText);
 
-       
         let summary;
-        let title;
 
-        try { 
-            // generate summary
+        // 1. Try Cohere
+        try {
+            summary = await generateSummaryFromCohere(pdfText);
+            console.log("this is summary from Cohere", summary);
+        } catch (cohereError) {
+            console.warn('Cohere failed:', cohereError);
 
-            summary = await generateSummaryFromOpenAI(pdfText);
-            console.log("this is summary", summary);
+            // 2. Try Gemini
+            try {
+                summary = await generateSummaryFromGemini(pdfText);
+                console.log("this is summary from Gemini", summary);
+            } catch (geminiError) {
+                console.warn('Gemini failed:', geminiError);
 
-           
-        } catch (error) {
-            
-            // call gemani
-
-            if(error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED'){
-                try{
- 
-                   summary = await generateSummaryFromGemini(pdfText);  
-                   console.log("this is summary from gemini", summary);                     
-                }catch(geminiError){
-                   console.log('Gemini API fails after the OpenAI quota exceeded', geminiError);
-                   throw new Error('Failed to generate summary with available AI provider');
+                // 3. Try OpenAI
+                try {
+                    summary = await generateSummaryFromOpenAI(pdfText);
+                    console.log("this is summary from OpenAI", summary);
+                } catch (openAiError) {
+                    console.error('OpenAI also failed:', openAiError);
+                    throw new Error('All providers failed to generate summary.');
                 }
-               
-            }else{
-                throw error;
             }
         }
-       
-        if(!summary){
+
+        if (!summary) {
             return {
                 success: false,
                 message: 'Summary generation failed',
                 data: null,
             };
         }
+
         return {
             success: true,
             message: 'Summary generated successfully',
             data: {
                 summary,
-                
             },
         };
     } catch (error) {
         console.log("this is the error of upload-action block", error);
         return {
             success: false,
-            message: 'File Parsing failed',
+            message: 'File Parsing or Summary generation failed',
             data: null,
         };
     }
 }
+
+
 
  interface pdfSummaryType {
     userId?: string;
