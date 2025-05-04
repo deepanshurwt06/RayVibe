@@ -60,7 +60,8 @@ export async function generatePdfSummary(uploadResponse: any) {
                 data: null,
             };
         }
-
+        
+        
         return {
             success: true,
             message: 'Summary generated successfully',
@@ -99,7 +100,7 @@ export async function savePdfSummary({
         // sql inserting pdf summary
     try{
       const sql = await getDbConnection();
-      await sql`INSERT INTO pdf_summary(
+       const [savedSummary] = await sql`INSERT INTO pdf_summary(
         user_id,
         original_file_url,
         summary_text,
@@ -113,7 +114,8 @@ export async function savePdfSummary({
           ${'completed'},
           ${title},
           ${fileName}
-        )`
+        )  RETURNING id , summary_text;`;
+          return savedSummary;
     }catch(error){
         console.error('Error saving PDF summary:', error);
         throw Error;
