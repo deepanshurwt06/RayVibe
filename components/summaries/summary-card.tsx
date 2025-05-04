@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Card } from "../ui/card";
 import DeleteSummary from "./delete-summary";
 import { FileText } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatFileName } from "@/lib/utils";
+import { formatDistanceToNow } from "date-fns";
 
 
 const SummaryHeader = ({
@@ -19,7 +20,11 @@ const SummaryHeader = ({
       <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-rose-400 mt-1"/>
       <div>
       <h3 className="text-base xl:text-lg font-semibold text-gray-900 truncate w-4/5">{title}</h3>
-      <p className="text-sm text-gray-500">{new Date(createdAt).toLocaleDateString()}</p>
+      <p className="text-sm text-gray-500">
+        {formatDistanceToNow(new Date(createdAt),{
+          addSuffix: true
+        })}
+        </p>
       </div>
       
   </div>;
@@ -46,13 +51,13 @@ export default function SummaryCard({ summary }: { summary: any }) {
     <div>
       <Card className="relative h-full">
         <div className="absolute top-2 right-2">
-          <DeleteSummary />
+          <DeleteSummary summaryId={summary.id}/>
         </div>
         <Link href={`summaries/${summary.id}`} className="block p-4 sm:p-6">
           <div className="flex flex-col gap-3 sm:gap-4">
             <SummaryHeader
               fileUrl={original_file_url}
-              title={parsedSummary.title || title}
+              title={parsedSummary.title || title  || formatFileName(original_file_url)}
               createdAt={created_at}
             />
          
