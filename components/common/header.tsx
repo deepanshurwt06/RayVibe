@@ -20,7 +20,7 @@ export default function Header() {
       <div className="flex justify-center gap-4 lg:gap-12">
         <NavLink href="/#pricing">Pricing</NavLink>
          <SignedIn >
-           <NavLink href="/#dashboard">Your Summaries</NavLink>
+           <NavLink href="/dashboard">Your Summaries</NavLink>
          </SignedIn>
       </div>
 

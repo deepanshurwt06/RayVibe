@@ -39,12 +39,7 @@ export default function SummaryCard({ summary }: { summary: any }) {
     const { title, summary_text, status, created_at, original_file_url, id } = summary;
 
     
-    let parsedSummary = { title: '', summary: '' };
-    try {
-      parsedSummary = JSON.parse(summary_text);
-    } catch (error) {
-      console.error('Error parsing summary text:', error);
-    }
+    const parsedSummary = { title, summary: summary_text };
 
 
   return (
