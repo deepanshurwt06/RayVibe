@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useUploadThing } from "@/utils/uploadthing";
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { storedPdfSummaryAction } from "@/actions/upload-actions";
+import { generatePdfSummary, storedPdfSummaryAction } from "@/actions/upload-actions";
 import { useRouter } from "next/navigation";
 
 
@@ -31,10 +31,11 @@ export default function UploadForm() {
             toast.success('File uploaded successfully ✅');
         },
         onUploadError:()=>{
+            toast.message('Uploading failed 📤');
             console.log("error occured while uploading")
         },
-        onUploadBegin:({file})=>{
-            toast.message('Uploading started 📤');
+        onUploadBegin:(data)=>{
+          console.log('upload has begin for ', data);
         }
     });
    
@@ -63,8 +64,8 @@ export default function UploadForm() {
 
         // schema validation with zod
         // upload the file to upload thing
-        const resp = await startUpload([file]);
-        if(!resp) {
+        const uploadResponse = await startUpload([file]);
+        if(!uploadResponse) {
             setIsLoading(false);
             return;
         }
@@ -72,12 +73,24 @@ export default function UploadForm() {
         // parse the pdf using lang chain
         const summaryRes = await fetch("/api/generate-summary", {
             method: "POST",
-            body: JSON.stringify(resp),
+            body: JSON.stringify(uploadResponse),
             headers: {
                 "Content-Type": "application/json",
             },
         });
-        const result = await summaryRes.json();
+
+        if (!uploadResponse || !uploadResponse[0]?.serverData?.fileUrl) {
+            toast.error('Upload failed. No file URL returned.');
+            return;
+          }
+          
+        const uploadedFileUrl = uploadResponse[0].serverData.fileUrl;
+
+       
+        const result = await generatePdfSummary({
+            fileUrl: uploadedFileUrl,
+            fileName: file.name,
+        });
         
 
         const {data = null , message = null } = result ||{};
@@ -89,7 +102,7 @@ export default function UploadForm() {
             if(data.summary){
                storeResult = await storedPdfSummaryAction({
                     summary : data.summary,
-                    fileUrl : resp[0].serverData.file.url,
+                    fileUrl : uploadedFileUrl,
                     title : data.title,
                     fileName : file.name,
 

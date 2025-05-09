@@ -8,24 +8,33 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { generateSummaryFromCohere } from "@/lib/cohere";
 
-export async function generatePdfSummary(uploadResponse: any) {
-  if (!uploadResponse || !uploadResponse[0]?.serverData?.file?.url) {
+export async function generatePdfSummary({
+  fileUrl,
+  fileName
+}:{
+  fileUrl: string,
+  fileName: string,
+}) {
+  if(!fileUrl) {
     return {
-      success: false,
-      message: "File Upload failed",
+      success : false,
+      message: 'File uploaded failed',
       data: null,
     };
   }
 
-  const {
-    serverData: {
-      userId,
-      file: { ufsUrl: pdfUrl, name: fileName },
-    },
-  } = uploadResponse[0];
+  if(!fileUrl){
+    return {
+      success : false,
+      message: 'File uploaded failed',
+      data: null,
+    };
+  }
+
+ 
 
   try {
-    const pdfText = await fetchAndExtractPdfText(pdfUrl);
+    const pdfText = await fetchAndExtractPdfText(fileUrl);
     console.log("this is pdf text", pdfText);
 
     let summaryData;

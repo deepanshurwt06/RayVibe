@@ -7,7 +7,8 @@ import { Loader2 } from "lucide-react";
 import { forwardRef } from "react";
 
 interface UploadFormInputProps {
-  onSubmit: () => (e: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+
   isLoading: boolean;
 }
 
