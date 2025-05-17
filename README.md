@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RayVibe: PDF Summarizer
 
-## Getting Started
+**RayVibe** is an AI-powered web application that generates short, easy-to-understand summaries from lengthy PDF documents. It uses **Cohere AI**, **Gemini**, and falls back to **OpenAI** to ensure reliable, high-quality outputs. The app supports PDF uploads and integrates secure payment functionality via **Stripe**.
 
-First, run the development server:
+![home](https://github.com/user-attachments/assets/014887da-83c4-4640-b201-5da46472e9c4)
+
+
+## 🧠 Features
+
+- 📄 Upload and parse long PDF files
+- 🤖 AI-based summary generation (Cohere → Gemini → OpenAI fallback)
+- 💳 Stripe payment integration
+- ⚡ Modern UI with TailwindCSS
+- 🔐 Secure and scalable with Next.js & SQL backend
+
+## 🚀 Tech Stack
+
+- **Frontend**: Next.js, TailwindCSS
+- **Backend**: Next.js API routes
+- **Database**: SQL (PostgreSQL / MySQL)
+- **AI Providers**: Cohere AI, Gemini, OpenAI
+- **Payments**: Stripe API
+
+## 🔧 Getting Started
+
+### 1. Clone the Repository
 
 ```bash
+git clone https://github.com/deepanshurwt06/RayVibe
+cd rayvibe
+2. Install Dependencies
+npm install
+3. Configure Environment Variables
+Create a .env.local file in the root directory and add your keys:
+
+env
+COHERE_API_KEY=your_cohere_api_key
+GEMINI_API_KEY=your_gemini_api_key
+OPENAI_API_KEY=your_openai_api_key
+STRIPE_SECRET_KEY=your_stripe_secret
+DATABASE_URL=your_database_connection_url
+UPLOADTHING_TOKEN=_your_uploadthing_token
+CLERK_SECRET_KEY=_your_cleark_api_key
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=_next_public_cleark_key
+
+4. Run the Development Server
+bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Open http://localhost:3000 in your browser.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🌐 Live Demo
+👉 https://rayvibe.onrender.com/
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+📁 Folder Structure
+bash
+Copy
+Edit
+/pages        # Next.js pages (routes)
+/components   # Reusable UI components
+/utils        # Helper functions
+/styles       # TailwindCSS styles
+/lib          # Database and API config
+📸 Screenshots
+<!-- Add real screenshots or links -->
+Upload PDF
+![upload](https://github.com/user-attachments/assets/72a2a1b3-51ea-4a99-97f9-c4db6ed2e3b9)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+View Summary
+![overview](https://github.com/user-attachments/assets/3916131a-383b-428a-9882-76dec5e51797)
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+🤝 Connect With Me
+GitHub: https://github.com/deepanshurwt06
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+LinkedIn: https://www.linkedin.com/in/deepanshurwt6/
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+📄 License
+This project is licensed under the MIT License.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built with ❤️ using AI and modern web tech.
