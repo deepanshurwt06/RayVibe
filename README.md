@@ -32,7 +32,9 @@ cd rayvibe
 npm install
 3. Configure Environment Variables
 Create a .env.local file in the root directory and add your keys:
-
+```
+### 2. Set up Environment variables
+```bash
 env
 COHERE_API_KEY=your_cohere_api_key
 GEMINI_API_KEY=your_gemini_api_key
@@ -42,17 +44,18 @@ DATABASE_URL=your_database_connection_url
 UPLOADTHING_TOKEN=_your_uploadthing_token
 CLERK_SECRET_KEY=_your_cleark_api_key
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=_next_public_cleark_key
-
-4. Run the Development Server
-bash
+```
+### 3. Run the Development Server
+```bash
 npm run dev
 Open http://localhost:3000 in your browser.
+```
 
 🌐 Live Demo
 👉 https://rayvibe.onrender.com/
 
 📁 Folder Structure
-bash
+```bash
 Copy
 Edit
 /pages        # Next.js pages (routes)
@@ -60,8 +63,8 @@ Edit
 /utils        # Helper functions
 /styles       # TailwindCSS styles
 /lib          # Database and API config
-📸 Screenshots
-<!-- Add real screenshots or links -->
+```
+
 Upload PDF
 ![upload](https://github.com/user-attachments/assets/72a2a1b3-51ea-4a99-97f9-c4db6ed2e3b9)
 
